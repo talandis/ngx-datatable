@@ -8,14 +8,16 @@ import {
   ViewChild,
   OnInit,
   OnDestroy,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy, HostListener
 } from '@angular/core';
-import { ScrollerComponent } from './scroller.component';
-import { MouseEvent } from '../../events';
-import { SelectionType } from '../../types/selection.type';
-import { columnsByPin, columnGroupWidths } from '../../utils/column';
-import { RowHeightCache } from '../../utils/row-height-cache';
-import { translateXY } from '../../utils/translate';
+import {ScrollerComponent} from './scroller.component';
+import {MouseEvent} from '../../events';
+import {SelectionType} from '../../types/selection.type';
+import {columnsByPin, columnGroupWidths} from '../../utils/column';
+import {RowHeightCache} from '../../utils/row-height-cache';
+import {translateXY} from '../../utils/translate';
+import {RowDragService} from "../../services/row-drag.service";
+import RowDropEvent from "../../utils/row-drop-event";
 
 @Component({
   selector: 'datatable-body',
@@ -31,7 +33,7 @@ import { translateXY } from '../../utils/translate';
       (select)="select.emit($event)"
       (activate)="activate.emit($event)"
     >
-      <datatable-progress *ngIf="loadingIndicator"> </datatable-progress>
+      <datatable-progress *ngIf="loadingIndicator"></datatable-progress>
       <datatable-scroller
         *ngIf="rows?.length"
         [scrollbarV]="scrollbarV"
@@ -62,7 +64,21 @@ import { translateXY } from '../../utils/translate';
           [expanded]="getRowExpanded(group)"
           [rowIndex]="getRowIndex(group[i])"
           (rowContextmenu)="rowContextmenu.emit($event)"
+          row-draggable
+          [dragEnabled]="rowsDraggable"
+          [dragData]="indexes.first + i"
+          [dragItem]="group"
         >
+          <div row-droppable (onDropEvent)="onDrop($event.index, indexes.first + i, $event.item )"
+               [ngClass]="'drop-area-top' + (dragService.dragActive ? ' drag-active' : '')"
+               dragOverClass="drop-over-active">
+            <div class="drop-indicator"></div>
+          </div>
+          <div row-droppable (onDropEvent)="onDrop($event.index, indexes.first + i + 1, $event.item )"
+               [ngClass]="'drop-area-bottom' + (dragService.dragActive ? ' drag-active' : '')"
+               dragOverClass="drop-over-active">
+            <div class="drop-indicator bottom"></div>
+          </div>
           <datatable-body-row
             *ngIf="!groupedRows; else groupedRowsTemplate"
             tabindex="-1"
@@ -144,6 +160,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() summaryRow: boolean;
   @Input() summaryPosition: string;
   @Input() summaryHeight: number;
+  @Input() rowsDraggable: boolean;
 
   @Input() set pageSize(val: number) {
     this._pageSize = val;
@@ -224,8 +241,9 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Output() detailToggle: EventEmitter<any> = new EventEmitter();
   @Output() rowContextmenu = new EventEmitter<{ event: MouseEvent; row: any }>(false);
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
+  @Output() rowDropped: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild(ScrollerComponent, { static: false }) scroller: ScrollerComponent;
+  @ViewChild(ScrollerComponent, {static: false}) scroller: ScrollerComponent;
 
   /**
    * Returns if selection is enabled.
@@ -268,7 +286,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   /**
    * Creates an instance of DataTableBodyComponent.
    */
-  constructor(private cd: ChangeDetectorRef) {
+  constructor(private cd: ChangeDetectorRef, public dragService: RowDragService) {
     // declare fn here so we can get access to the `this` property
     this.rowTrackingFn = (index: number, row: any): any => {
       const idx = this.getRowIndex(row);
@@ -285,7 +303,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.rowDetail) {
-      this.listener = this.rowDetail.toggle.subscribe(({ type, value }: { type: string; value: any }) => {
+      this.listener = this.rowDetail.toggle.subscribe(({type, value}: { type: string; value: any }) => {
         if (type === 'row') {
           this.toggleRowExpansion(value);
         }
@@ -302,7 +320,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     }
 
     if (this.groupHeader) {
-      this.listener = this.groupHeader.toggle.subscribe(({ type, value }: { type: string; value: any }) => {
+      this.listener = this.groupHeader.toggle.subscribe(({type, value}: { type: string; value: any }) => {
         if (type === 'group') {
           this.toggleRowExpansion(value);
         }
@@ -386,7 +404,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     }
 
     if (direction !== undefined && !isNaN(offset)) {
-      this.page.emit({ offset });
+      this.page.emit({offset});
     }
   }
 
@@ -394,7 +412,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
    * Updates the rows in the view port
    */
   updateRows(): void {
-    const { first, last } = this.indexes;
+    const {first, last} = this.indexes;
     let rowIndex = first;
     let idx = 0;
     const temp: any[] = [];
@@ -555,7 +573,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const styles = { position: 'absolute' };
+    const styles = {position: 'absolute'};
     const pos = this.rowHeightsCache.query(this.rows.length - 1);
 
     translateXY(styles, 0, pos);
@@ -600,7 +618,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       last = Math.min(first + this.pageSize, this.rowCount);
     }
 
-    this.indexes = { first, last };
+    this.indexes = {first, last};
   }
 
   /**
@@ -756,6 +774,19 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     return styles;
   }
 
+  @HostListener('dragend', ['$event'])
+  onDragEnd(event) {
+    this.dragService.endDrag();
+  }
+
+  /**
+   * Event when user dropped a row on a specific index
+   * For movement logic see demo page (row-drag-drop.component)
+   */
+  onDrop(startIndex: number, destIndex: number, row: any) {
+    this.rowDropped.emit(new RowDropEvent(startIndex, destIndex, row));
+  }
+
   /**
    * Returns if the row was expanded and set default row expansion when row expansion is empty
    */
@@ -787,6 +818,6 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   onTreeAction(row: any) {
-    this.treeAction.emit({ row });
+    this.treeAction.emit({row});
   }
 }

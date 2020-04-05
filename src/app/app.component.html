@@ -126,6 +126,9 @@
           <li>
             <a href="#comparator-sorting" (click)="state = 'comparator-sorting'">Comparator</a>
           </li>
+          <li>
+            <a href="#drag-drop-sorting" (click)="state = 'drag-drop-sorting'">Drag & Drop</a>
+          </li>
         </ul>
       </li>
       <li>
@@ -236,6 +239,7 @@
     <default-sorting-demo *ngIf="state === 'default-sorting'"></default-sorting-demo>
     <server-sorting-demo *ngIf="state === 'server-sorting'"></server-sorting-demo>
     <comparator-sorting-demo *ngIf="state === 'comparator-sorting'"></comparator-sorting-demo>
+    <drag-drop-sorting-demo *ngIf="state === 'drag-drop-sorting'"></drag-drop-sorting-demo>
 
     <!-- Selection -->
     <cell-selection-demo *ngIf="state === 'cell-selection'"></cell-selection-demo>

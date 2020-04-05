@@ -40,6 +40,7 @@ import { SortingComparatorComponent } from './sorting/sorting-comparator.compone
 import { DefaultSortingComponent } from './sorting/sorting-default.component';
 import { ServerSortingComponent } from './sorting/sorting-server.component';
 import { ClientSortingComponent } from './sorting/sorting-client.component';
+import { DragDropSortingComponent } from './sorting/sorting-drag-drop.component';
 
 // -- Templates
 import { InlineTemplatesComponent } from './templates/template-dom.component';
@@ -94,6 +95,7 @@ import { CommonModule } from '@angular/common';
     ClientSortingComponent,
     DefaultSortingComponent,
     ServerSortingComponent,
+    DragDropSortingComponent,
     SortingComparatorComponent,
     CellSelectionComponent,
     MultiSelectionComponent,

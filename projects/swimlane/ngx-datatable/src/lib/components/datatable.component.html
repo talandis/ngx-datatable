@@ -59,6 +59,8 @@
     (select)="onBodySelect($event)"
     (scroll)="onBodyScroll($event)"
     (treeAction)="onTreeAction($event)"
+    [rowsDraggable]="rowsDraggable"
+    (rowDropped)="onRowDropped($event)"
   >
   </datatable-body>
   <datatable-footer

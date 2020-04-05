@@ -412,6 +412,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
   @Input() summaryPosition: string = 'top';
 
   /**
+   * A property holds if row drag and drop is enabled
+   */
+   @Input() rowsDraggable: boolean = false;
+
+  /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.
    */
   @Output() scroll: EventEmitter<any> = new EventEmitter();
@@ -457,6 +462,11 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
    * A row was expanded ot collapsed for tree
    */
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
+
+  /**
+   * Row was dropped
+   */
+  @Output() rowDropped: EventEmitter<any> = new EventEmitter();
 
   /**
    * CSS class applied if the header height if fixed height.
@@ -1131,6 +1141,16 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
     // TODO: For duplicated items this will not work
     const rowIndex = this._rows.findIndex(r => r[this.treeToRelation] === event.row[this.treeToRelation]);
     this.treeAction.emit({ row, rowIndex });
+  }
+
+  onRowDropped(event: any) {
+
+    const rows = [...this._rows];
+    const extracted = rows.splice(event.startIndex, 1)[0];
+    rows.splice(event.destIndex, 0, extracted);
+    this.rows = rows;
+
+    this.rowDropped.emit(event);
   }
 
   ngOnDestroy() {

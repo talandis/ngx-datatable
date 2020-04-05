@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ScrollbarHelper } from './services/scrollbar-helper.service';
 import { DimensionsHelper } from './services/dimensions-helper.service';
 import { ColumnChangesService } from './services/column-changes.service';
+import {RowDragService} from "./services/row-drag.service";
 import { DataTableFooterTemplateDirective } from './components/footer/footer-template.directive';
 import { VisibilityDirective } from './directives/visibility.directive';
 import { DraggableDirective } from './directives/draggable.directive';
@@ -31,10 +32,12 @@ import { DataTableColumnCellTreeToggle } from './components/columns/tree.directi
 import { DatatableFooterDirective } from './components/footer/footer.directive';
 import { DatatableGroupHeaderTemplateDirective } from './components/body/body-group-header-template.directive';
 import { DataTableSummaryRowComponent } from './components/body/summary/summary-row.component';
+import {RowDraggableDirective} from "./directives/row-draggable.directive";
+import {RowDropDirective} from "./directives/row-droppable.directive";
 
 @NgModule({
   imports: [CommonModule],
-  providers: [ScrollbarHelper, DimensionsHelper, ColumnChangesService],
+  providers: [ScrollbarHelper, DimensionsHelper, ColumnChangesService, RowDragService],
   declarations: [
     DataTableFooterTemplateDirective,
     VisibilityDirective,
@@ -63,7 +66,10 @@ import { DataTableSummaryRowComponent } from './components/body/summary/summary-
     DataTableColumnCellTreeToggle,
     DatatableFooterDirective,
     DatatableGroupHeaderTemplateDirective,
-    DataTableSummaryRowComponent
+    DataTableSummaryRowComponent,
+    DraggableDirective,
+    RowDraggableDirective,
+    RowDropDirective
   ],
   exports: [
     DatatableComponent,

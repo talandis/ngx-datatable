@@ -239,6 +239,8 @@
       -moz-box-direction: normal;
       -ms-flex-direction: column;
       flex-direction: column;
+
+      position: relative;
     }
 
     .datatable-body-row {
@@ -310,6 +312,50 @@
           }
         }
       }
+    }
+  }
+
+  .drop-area-top {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50%;
+    z-index: -1;
+
+    &.drag-active {
+      z-index: 99;
+    }
+  }
+
+  .drop-area-bottom {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 50%;
+    z-index: -1;
+
+    &.drag-active {
+      z-index: 99;
+    }
+  }
+
+  .drop-indicator {
+    height: 1px;
+    display: none;
+    width: 100%;
+    background: #00FF00;
+
+    &.bottom {
+      position: absolute;
+      bottom: -1px;
+    }
+  }
+
+  .drop-over-active {
+    z-index: 99;
+
+    .drop-indicator {
+      display: block;
     }
   }
 }
