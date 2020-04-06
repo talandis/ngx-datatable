@@ -10,14 +10,14 @@ import {
   OnDestroy,
   ChangeDetectionStrategy, HostListener
 } from '@angular/core';
-import {ScrollerComponent} from './scroller.component';
-import {MouseEvent} from '../../events';
-import {SelectionType} from '../../types/selection.type';
-import {columnsByPin, columnGroupWidths} from '../../utils/column';
-import {RowHeightCache} from '../../utils/row-height-cache';
-import {translateXY} from '../../utils/translate';
+import { ScrollerComponent } from './scroller.component';
+import { SelectionType } from '../../types/selection.type';
+import { columnsByPin, columnGroupWidths } from '../../utils/column';
+import { RowHeightCache } from '../../utils/row-height-cache';
+import { translateXY } from '../../utils/translate';
 import {RowDragService} from "../../services/row-drag.service";
 import RowDropEvent from "../../utils/row-drop-event";
+import {MouseEvent} from '../../events';
 
 @Component({
   selector: 'datatable-body',
@@ -59,10 +59,10 @@ import RowDropEvent from "../../utils/row-drop-event";
           [rowDetail]="rowDetail"
           [groupHeader]="groupHeader"
           [offsetX]="offsetX"
-          [detailRowHeight]="getDetailRowHeight(group[i], i)"
+          [detailRowHeight]="getDetailRowHeight(group && group[i], i)"
           [row]="group"
           [expanded]="getRowExpanded(group)"
-          [rowIndex]="getRowIndex(group[i])"
+          [rowIndex]="getRowIndex(group && group[i])"
           (rowContextmenu)="rowContextmenu.emit($event)"
           row-draggable
           [dragEnabled]="rowsDraggable"
@@ -92,7 +92,7 @@ import RowDropEvent from "../../utils/row-drop-event";
             [expanded]="getRowExpanded(group)"
             [rowClass]="rowClass"
             [displayCheck]="displayCheck"
-            [treeStatus]="group.treeStatus"
+            [treeStatus]="group && group.treeStatus"
             (treeAction)="onTreeAction(group)"
             (activate)="selector.onActivate($event, indexes.first + i)"
           >
@@ -192,8 +192,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
 
   @Input() set offset(val: number) {
     this._offset = val;
-    if (!this.scrollbarV || (this.scrollbarV && !this.virtualization))
-      this.recalcLayout();
+    if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) this.recalcLayout();
   }
 
   get offset(): number {
@@ -804,7 +803,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     if (!expanded || !expanded.length) return -1;
 
     const rowId = this.rowIdentity(row);
-    return expanded.findIndex((r) => {
+    return expanded.findIndex(r => {
       const id = this.rowIdentity(r);
       return id === rowId;
     });
