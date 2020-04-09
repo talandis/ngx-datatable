@@ -710,7 +710,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
    * content has been fully initialized.
    */
   ngAfterContentInit() {
-    this.columnTemplates.changes.subscribe(v => this.translateColumns(v));
+    this.columnTemplates.changes.subscribe((v) => this.translateColumns(v));
     this.listenForColumnInputChanges();
   }
 
@@ -772,7 +772,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
     };
 
     // convert map back to a simple array of objects
-    return Array.from(map, x => addGroup(x[0], x[1]));
+    return Array.from(map, (x) => addGroup(x[0], x[1]));
   }
 
   /*
@@ -1025,7 +1025,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
    * The header triggered a column re-order event.
    */
   onColumnReorder({ column, newValue, prevValue }: any): void {
-    const cols = this._internalColumns.map(c => {
+    const cols = this._internalColumns.map((c) => {
       return { ...c };
     });
 
@@ -1138,7 +1138,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
   onTreeAction(event: any) {
     const row = event.row;
     // TODO: For duplicated items this will not work
-    const rowIndex = this._rows.findIndex(r => r[this.treeToRelation] === event.row[this.treeToRelation]);
+    const rowIndex = this._rows.findIndex((r) => r[this.treeToRelation] === event.row[this.treeToRelation]);
     this.treeAction.emit({ row, rowIndex });
   }
 
@@ -1153,7 +1153,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this._subscriptions.forEach(subscription => subscription.unsubscribe());
+    this._subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   /**
