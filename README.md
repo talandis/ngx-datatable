@@ -2,8 +2,7 @@
 
 ### This is not an official package.
 
-This is the official version [@swimlane/ngx-datatable](https://www.npmjs.com/package/@swimlane/ngx-datatable)  
-This package is the same as official but with drag&drop for rows.
+This is same as official version [@swimlane/ngx-datatable](https://www.npmjs.com/package/@swimlane/ngx-datatable) but with drag&drop support
 
 [![Join the chat at https://gitter.im/swimlane/ngx-datatable](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/swimlane/ngx-datatable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Code Climate](https://codeclimate.com/github/swimlane/ngx-datatable/badges/gpa.svg)](https://codeclimate.com/github/swimlane/ngx-datatable)
