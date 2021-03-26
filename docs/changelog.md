@@ -1,5 +1,17 @@
 # Changelog
 
+## 19.0.0
+
+- Breaking: Update to angular 11
+
+## 18.0.0
+
+- Breaking: Update to angular 10
+
+## 17.1.0
+
+- Feature: Add sorting: unset icon
+
 ## 17.0.0
 
 - Chore: explicitly only suppot ng9

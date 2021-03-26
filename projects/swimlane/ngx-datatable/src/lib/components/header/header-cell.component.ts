@@ -48,6 +48,7 @@ export class DataTableHeaderCellComponent {
   @Input() sortType: SortType;
   @Input() sortAscendingIcon: string;
   @Input() sortDescendingIcon: string;
+  @Input() sortUnsetIcon: string;
 
   @Input() isTarget: boolean;
   @Input() targetMarkerTemplate: any;
@@ -158,22 +159,28 @@ export class DataTableHeaderCellComponent {
   sortDir: SortDirection;
   selectFn = this.select.emit.bind(this.select);
 
-  cellContext: any = {
-    column: this.column,
-    sortDir: this.sortDir,
-    sortFn: this.sortFn,
-    allRowsSelected: this.allRowsSelected,
-    selectFn: this.selectFn
-  };
+  cellContext: any;
 
   private _column: TableColumn;
   private _sorts: any[];
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef) {
+    this.cellContext = {
+      column: this.column,
+      sortDir: this.sortDir,
+      sortFn: this.sortFn,
+      allRowsSelected: this.allRowsSelected,
+      selectFn: this.selectFn
+    };
+  }
 
   @HostListener('contextmenu', ['$event'])
   onContextmenu($event: MouseEvent): void {
     this.columnContextmenu.emit({ event: $event, column: this.column });
+  }
+
+  ngOnInit() {
+    this.sortClass = this.calcSortClass(this.sortDir);
   }
 
   calcSortDir(sorts: any[]): any {
@@ -198,12 +205,13 @@ export class DataTableHeaderCellComponent {
   }
 
   calcSortClass(sortDir: SortDirection): string {
+    if (!this.cellContext.column.sortable) return;
     if (sortDir === SortDirection.asc) {
       return `sort-btn sort-asc ${this.sortAscendingIcon}`;
     } else if (sortDir === SortDirection.desc) {
       return `sort-btn sort-desc ${this.sortDescendingIcon}`;
     } else {
-      return `sort-btn`;
+      return `sort-btn ${this.sortUnsetIcon}`;
     }
   }
 }

@@ -302,7 +302,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     if (this.rowDetail) {
-      this.listener = this.rowDetail.toggle.subscribe(({type, value}: { type: string; value: any }) => {
+      this.listener = this.rowDetail.toggle.subscribe(({ type, value }: { type: string; value: any }) => {
         if (type === 'row') {
           this.toggleRowExpansion(value);
         }
@@ -319,7 +319,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     }
 
     if (this.groupHeader) {
-      this.listener = this.groupHeader.toggle.subscribe(({type, value}: { type: string; value: any }) => {
+      this.listener = this.groupHeader.toggle.subscribe(({ type, value }: { type: string; value: any }) => {
         if (type === 'group') {
           this.toggleRowExpansion(value);
         }
@@ -403,7 +403,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     }
 
     if (direction !== undefined && !isNaN(offset)) {
-      this.page.emit({offset});
+      this.page.emit({ offset });
     }
   }
 
@@ -411,7 +411,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
    * Updates the rows in the view port
    */
   updateRows(): void {
-    const {first, last} = this.indexes;
+    const { first, last } = this.indexes;
     let rowIndex = first;
     let idx = 0;
     const temp: any[] = [];
@@ -580,7 +580,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const styles = {position: 'absolute'};
+    const styles = { position: 'absolute' };
     const pos = this.rowHeightsCache.query(this.rows.length - 1);
 
     translateXY(styles, 0, pos);
@@ -625,7 +625,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       last = Math.min(first + this.pageSize, this.rowCount);
     }
 
-    this.indexes = {first, last};
+    this.indexes = { first, last };
   }
 
   /**
@@ -825,6 +825,6 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   onTreeAction(row: any) {
-    this.treeAction.emit({row});
+    this.treeAction.emit({ row });
   }
 }
