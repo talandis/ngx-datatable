@@ -1,5 +1,16 @@
 # Changelog
 
+## 22.3.0
+
+- Feature: support row wrapper for adding custom directives,
+  like CDK Drag and Drop
+- Fix: horizontal scroll on grouped rows had infinite width
+- Fix: support sorting with grouped rows
+- Fix: remove right spacing on fixed column when no vertical scroll is needed
+- Fix: keep horizontal scrolling in empty tables, if columns do not fit on screen
+- Fix: support grouped row selection
+- Fix: support tabbing over header cells
+
 ## 22.2.2
 
 - Fix: prefer un-prefixed style attributes over prefixed one
