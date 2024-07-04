@@ -1,5 +1,13 @@
 # Changelog
 
+## 22.4.0
+
+- Feature: support removing sort on column (#64)
+- Feature: support row group checkbox (#62)
+- Fix: correct expanding all row groups (#60)
+- Fix: support changing row group height (#61)
+- Fix: correct table width on empty table (#63)
+
 ## 22.3.0
 
 - Feature: support row wrapper for adding custom directives,
