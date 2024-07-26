@@ -1,5 +1,12 @@
 # Changelog
 
+## 22.4.1 (2024-07-26)
+
+### Bug Fixes
+
+- **disabled-rows:** recalculate only if row differs (#73) (f3131cb)
+- tree grouping breaks if rows are assigned statically (#77) (d4f1ba5)
+
 ## 22.4.0
 
 - Feature: support removing sort on column (#64)
