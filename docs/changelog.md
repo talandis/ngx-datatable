@@ -1,5 +1,14 @@
 # Changelog
 
+## 21.3.2
+
+- Fix: prefer un-prefixed style attributes over prefixed one
+
+  Fixes an issue on Firefox 126 (released May 2024), which no longer support
+  `-moz-transform` but `transform`. But when we get style attributes from an element,
+  `-moz-transform` is still available, which makes our `testStyle` fails. So to resolve
+  this issue, we want to use un-prefixed attribute if available.
+
 ## 21.3.1
 
 - Fix: remove ghost placeholder cells after data load
