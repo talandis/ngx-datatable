@@ -1,5 +1,6 @@
-<div visibilityObserver (visible)="recalculate()">
+<div role="table" visibilityObserver (visible)="recalculate()">
   <datatable-header
+    role="rowgroup"
     *ngIf="headerHeight"
     [sorts]="sorts"
     [sortType]="sortType"
@@ -18,12 +19,15 @@
     [selectionType]="selectionType"
     (sort)="onColumnSort($event)"
     (resize)="onColumnResize($event)"
+    (resizing)="onColumnResizing($event)"
     (reorder)="onColumnReorder($event)"
     (select)="onHeaderSelect($event)"
     (columnContextmenu)="onColumnContextmenu($event)"
   >
   </datatable-header>
   <datatable-body
+    tabindex="0"
+    role="rowgroup"
     [groupRowsBy]="groupRowsBy"
     [groupedRows]="groupedRows"
     [rows]="_internalRows"
@@ -47,6 +51,7 @@
     [bodyHeight]="bodyHeight"
     [selectionType]="selectionType"
     [emptyMessage]="messages.emptyMessage"
+    [emptyCustomContent]="emptyCustomContent"
     [rowIdentity]="rowIdentity"
     [rowClass]="rowClass"
     [selectCheck]="selectCheck"
@@ -63,6 +68,7 @@
     [rowsDraggable]="rowsDraggable"
     (rowDropped)="onRowDropped($event)"
   >
+    <ng-content select="[empty-content]" ngProjectAs="[empty-content]"></ng-content>
   </datatable-body>
   <datatable-footer
     *ngIf="footerHeight"

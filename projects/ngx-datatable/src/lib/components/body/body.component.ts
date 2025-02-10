@@ -80,6 +80,7 @@ import {MouseEvent} from '../../events';
             <div class="drop-indicator bottom"></div>
           </div>
           <datatable-body-row
+            role="row"
             *ngIf="!groupedRows; else groupedRowsTemplate"
             tabindex="-1"
             [isSelected]="selector.getRowSelected(group)"
@@ -99,6 +100,7 @@ import {MouseEvent} from '../../events';
           </datatable-body-row>
           <ng-template #groupedRowsTemplate>
             <datatable-body-row
+              role="row"
               *ngFor="let row of group.value; let i = index; trackBy: rowTrackingFn"
               tabindex="-1"
               [isSelected]="selector.getRowSelected(row)"
@@ -117,6 +119,7 @@ import {MouseEvent} from '../../events';
           </ng-template>
         </datatable-row-wrapper>
         <datatable-summary-row
+          role="row"
           *ngIf="summaryRow && summaryPosition === 'bottom'"
           [ngStyle]="getBottomSummaryRowStyles()"
           [rowHeight]="summaryHeight"
@@ -127,7 +130,15 @@ import {MouseEvent} from '../../events';
         >
         </datatable-summary-row>
       </datatable-scroller>
-      <div class="empty-row" *ngIf="!rows?.length && !loadingIndicator" [innerHTML]="emptyMessage"></div>
+      <div
+        class="empty-row"
+        *ngIf="!rows?.length && !loadingIndicator && !emptyCustomContent"
+        [innerHTML]="emptyMessage"
+      ></div>
+      <ng-content
+        select="[empty-content]"
+        *ngIf="!rows?.length && !loadingIndicator && emptyCustomContent"
+      ></ng-content>
     </datatable-selection>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -143,6 +154,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() rowHeight: number | 'auto' | ((row?: any) => number);
   @Input() offsetX: number;
   @Input() emptyMessage: string;
+  @Input() emptyCustomContent: boolean;
   @Input() selectionType: SelectionType;
   @Input() selected: any[] = [];
   @Input() rowIdentity: any;
@@ -163,8 +175,15 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() rowsDraggable: boolean;
 
   @Input() set pageSize(val: number) {
-    this._pageSize = val;
-    this.recalcLayout();
+    if (val !== this._pageSize) {
+      this._pageSize = val;
+      this.recalcLayout();
+
+      // Emits the page event if page size has been changed
+      this._offsetEvent = -1;
+      this.updatePage('up');
+      this.updatePage('down');
+    }
   }
 
   get pageSize(): number {
@@ -172,8 +191,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set rows(val: any[]) {
-    this._rows = val;
-    this.recalcLayout();
+    if (val !== this._rows) {
+      this._rows = val;
+      this.recalcLayout();
+    }
   }
 
   get rows(): any[] {
@@ -181,9 +202,11 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set columns(val: any[]) {
-    this._columns = val;
-    const colsByPin = columnsByPin(val);
-    this.columnGroupWidths = columnGroupWidths(colsByPin, val);
+    if (val !== this._columns) {
+      this._columns = val;
+      const colsByPin = columnsByPin(val);
+      this.columnGroupWidths = columnGroupWidths(colsByPin, val);
+    }
   }
 
   get columns(): any[] {
@@ -191,8 +214,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set offset(val: number) {
-    this._offset = val;
-    if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) this.recalcLayout();
+    if (val !== this._offset) {
+      this._offset = val;
+      if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) this.recalcLayout();
+    }
   }
 
   get offset(): number {
@@ -200,8 +225,10 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   @Input() set rowCount(val: number) {
-    this._rowCount = val;
-    this.recalcLayout();
+    if (val !== this._rowCount) {
+      this._rowCount = val;
+      this.recalcLayout();
+    }
   }
 
   get rowCount(): number {
@@ -281,6 +308,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   _rowCount: number;
   _offset: number;
   _pageSize: number;
+  _offsetEvent = -1;
 
   /**
    * Creates an instance of DataTableBodyComponent.
@@ -388,6 +416,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     this.updateIndexes();
     this.updatePage(event.direction);
     this.updateRows();
+    this.cd.detectChanges();
   }
 
   /**
@@ -402,7 +431,8 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
       offset = Math.floor(offset);
     }
 
-    if (direction !== undefined && !isNaN(offset)) {
+    if (direction !== undefined && !isNaN(offset) && offset !== this._offsetEvent) {
+      this._offsetEvent = offset;
       this.page.emit({ offset });
     }
   }

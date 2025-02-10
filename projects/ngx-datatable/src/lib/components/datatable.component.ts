@@ -332,6 +332,17 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
   };
 
   /**
+   * A flag to display custom content instead of emptyMessage,
+   * when rows array contains no values. Assumes that custom content has been
+   * provided with the appropriate `empty-content` attribute.
+   *
+   *    <ngx-datatable>
+   *      <div empty-content>...</div>
+   *    </ngx-datatable>
+   */
+  @Input() emptyCustomContent: boolean = false;
+
+  /**
    * Row specific classes.
    * Similar implementation to ngClass.
    *
@@ -890,12 +901,14 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
 
     this.offset = offset;
 
-    this.page.emit({
-      count: this.count,
-      pageSize: this.pageSize,
-      limit: this.limit,
-      offset: this.offset
-    });
+    if (!isNaN(this.offset)) {
+      this.page.emit({
+        count: this.count,
+        pageSize: this.pageSize,
+        limit: this.limit,
+        offset: this.offset
+      });
+    }
   }
 
   /**
@@ -1020,6 +1033,16 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit {
       column,
       newValue
     });
+  }
+
+  onColumnResizing({ column, newValue }: any): void {
+    if (column === undefined) {
+      return;
+    }
+    column.width = newValue;
+    column.$$oldWidth = newValue;
+    const idx = this._internalColumns.indexOf(column);
+    this.recalculateColumns(this._internalColumns, idx);
   }
 
   /**

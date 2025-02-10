@@ -1,11 +1,11 @@
 {
   "name": "@ttalandis/ngx-datatable",
-  "version": "19.0.0-1",
+  "version": "20.1.0-1",
   "description": "ngx-datatable is an Angular table grid component for presenting large and complex data.",
   "peerDependencies": {
-    "@angular/common": "^11.0.2",
-    "@angular/core": "^11.0.2",
-    "@angular/platform-browser": "^11.0.2",
+    "@angular/common": ">=11.0.2",
+    "@angular/core": ">=11.0.2",
+    "@angular/platform-browser": ">=11.0.2",
     "rxjs": "^6.6.3"
   },
   "dependencies": {
@@ -23,10 +23,10 @@
     "grid",
     "table"
   ],
-  "author": "Swimlane",
+  "author": "Siemens",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/swimlane/ngx-datatable/issues"
+    "url": "https://github.com/siemens/ngx-datatable/issues"
   },
-  "homepage": "https://github.com/swimlane/ngx-datatable#readme"
+  "homepage": "https://github.com/siemens/ngx-datatable#readme"
 }
