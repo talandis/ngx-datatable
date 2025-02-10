@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
@@ -52,11 +52,10 @@ describe('DraggableDirective', () => {
 
       beforeEach(() => {
         element.classList.add('draggable');
-        mouseDown = <MouseEvent>{
+        mouseDown = {
           target: element,
-          // tslint:disable-next-line
           preventDefault: () => {}
-        };
+        } as MouseEvent;
       });
 
       // or else the document:mouseup event can fire again when resizing.
@@ -74,8 +73,7 @@ describe('DraggableDirective', () => {
           directive.onMousedown(mouseDown);
           expect(directive.subscription).toBeTruthy();
 
-          // tslint:disable-next-line: no-object-literal-type-assertion
-          directive.onMouseup(<MouseEvent>{});
+          directive.onMouseup({} as MouseEvent);
 
           expect(directive.subscription).toBeUndefined();
         });
@@ -88,8 +86,7 @@ describe('DraggableDirective', () => {
 
           expect(directive.subscription).toBeTruthy();
 
-          // tslint:disable-next-line: no-object-literal-type-assertion
-          directive.onMouseup(<MouseEvent>{});
+          directive.onMouseup({} as MouseEvent);
 
           expect(directive.subscription).toBeTruthy();
         });

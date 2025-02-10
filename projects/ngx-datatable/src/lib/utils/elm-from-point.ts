@@ -2,7 +2,6 @@ if (typeof document !== 'undefined' && !document.elementsFromPoint) {
   document.elementsFromPoint = elementsFromPoint;
 }
 
-/*tslint:disable*/
 /**
  * Polyfill for `elementsFromPoint`
  *
@@ -33,11 +32,10 @@ export function elementsFromPoint(x: number, y: number) {
   }
 
   // restore the previous pointer-events values
-  for (i = previousPointerEvents.length; (d = previousPointerEvents[--i]); ) {
+  for (i = previousPointerEvents.length; (d = previousPointerEvents[--i]);) {
     elements[i].style.setProperty('pointer-events', d.value ? d.value : '', d.priority);
   }
 
   // return our results
   return elements;
 }
-/*tslint:enable*/

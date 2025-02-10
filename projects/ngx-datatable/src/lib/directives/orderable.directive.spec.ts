@@ -75,8 +75,7 @@ describe('OrderableDirective', () => {
       }
 
       function newDraggable() {
-        // tslint:disable-next-line: no-object-literal-type-assertion
-        const draggable = new DraggableDirective(<ElementRef>{});
+        const draggable = new DraggableDirective({} as ElementRef);
 
         // used for the KeyValueDiffer
         draggable.dragModel = {

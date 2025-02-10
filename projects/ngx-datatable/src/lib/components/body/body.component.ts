@@ -1,18 +1,19 @@
 import {
-  Component,
-  Output,
-  EventEmitter,
-  Input,
-  HostBinding,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewChild,
-  OnInit,
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
   OnDestroy,
-  ChangeDetectionStrategy, HostListener
+  OnInit,
+  Output,
+  ViewChild
 } from '@angular/core';
 import { ScrollerComponent } from './scroller.component';
 import { SelectionType } from '../../types/selection.type';
-import { columnsByPin, columnGroupWidths } from '../../utils/column';
+import { columnGroupWidths, columnsByPin } from '../../utils/column';
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { translateXY } from '../../utils/translate';
 import {RowDragService} from "../../services/row-drag.service";
@@ -22,7 +23,10 @@ import {MouseEvent} from '../../events';
 @Component({
   selector: 'datatable-body',
   template: `
-    <datatable-progress *ngIf="loadingIndicator"> </datatable-progress>
+    <ng-container *ngIf="loadingIndicator">
+      <span #customIndicator><ng-content select="[loading-indicator]"></ng-content></span>
+      <datatable-progress *ngIf="!customIndicator?.hasChildNodes()"></datatable-progress>
+    </ng-container>
     <datatable-selection
       #selector
       [selected]="selected"
@@ -132,13 +136,12 @@ import {MouseEvent} from '../../events';
       </datatable-scroller>
       <div
         class="empty-row"
-        *ngIf="!rows?.length && !loadingIndicator && !emptyCustomContent"
+        *ngIf="!rows?.length && !loadingIndicator && !customEmptyContent?.hasChildNodes()"
         [innerHTML]="emptyMessage"
       ></div>
-      <ng-content
-        select="[empty-content]"
-        *ngIf="!rows?.length && !loadingIndicator && emptyCustomContent"
-      ></ng-content>
+      <div #customEmptyContent>
+        <ng-content select="[empty-content]" *ngIf="!rows?.length && !loadingIndicator"></ng-content>
+      </div>
     </datatable-selection>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -154,7 +157,6 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() rowHeight: number | 'auto' | ((row?: any) => number);
   @Input() offsetX: number;
   @Input() emptyMessage: string;
-  @Input() emptyCustomContent: boolean;
   @Input() selectionType: SelectionType;
   @Input() selected: any[] = [];
   @Input() rowIdentity: any;
@@ -216,7 +218,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Input() set offset(val: number) {
     if (val !== this._offset) {
       this._offset = val;
-      if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) this.recalcLayout();
+      if (!this.scrollbarV || (this.scrollbarV && !this.virtualization)) {this.recalcLayout();}
     }
   }
 
@@ -512,6 +514,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     let rowHeight = 0;
 
     if (group.value) {
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let index = 0; index < group.value.length; index++) {
         rowHeight += this.getRowAndDetailHeight(group.value[index]);
       }
@@ -637,7 +640,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
         // Calculation of the first and last indexes will be based on where the
         // scrollY position would be at.  The last index would be the one
         // that shows up inside the view port the last.
-        const height = parseInt(this.bodyHeight, 0);
+        const height = parseInt(this.bodyHeight, 10);
         first = this.rowHeightsCache.getRowIndex(this.offsetY);
         last = this.rowHeightsCache.getRowIndex(height + this.offsetY) + 1;
       } else {
@@ -801,7 +804,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
     if (group === 'left') {
       translateXY(styles, offsetX, 0);
     } else if (group === 'right') {
-      const bodyWidth = parseInt(this.innerWidth + '', 0);
+      const bodyWidth = this.innerWidth;
       const totalDiff = widths.total - bodyWidth;
       const offsetDiff = totalDiff - offsetX;
       const offset = offsetDiff * -1;
@@ -838,7 +841,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   }
 
   getRowExpandedIdx(row: any, expanded: any[]): number {
-    if (!expanded || !expanded.length) return -1;
+    if (!expanded || !expanded.length) {return -1;}
 
     const rowId = this.rowIdentity(row);
     return expanded.findIndex(r => {

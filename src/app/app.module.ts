@@ -9,7 +9,7 @@ import { BasicFixedComponent } from './basic/basic-fixed.component';
 import { BasicAutoComponent } from './basic/basic-auto.component';
 import { VirtualScrollComponent } from './basic/virtual.component';
 import { InlineEditComponent } from './basic/inline.component';
-import { HorzVertScrolling } from './basic/scrolling.component';
+import { HorzVertScrollingComponent } from './basic/scrolling.component';
 import { MultipleTablesComponent } from './basic/multiple.component';
 import { FullScreenComponent } from './basic/fullscreen.component';
 import { RowDetailsComponent } from './basic/row-detail.component';
@@ -23,6 +23,7 @@ import { RowCssComponent } from './basic/css.component';
 import { DynamicHeightComponent } from './basic/dynamic-height.component';
 import { FooterDemoComponent } from './basic/footer.component';
 import { RowGroupingComponent } from './basic/row-grouping.component';
+import { BasicEmptyComponent } from './basic/empty.component';
 
 // -- Themes
 import { BootstrapThemeComponent } from './basic/bootstrap.component';
@@ -57,6 +58,7 @@ import { SingleSelectionComponent } from './selection/selection-single.component
 import { MultiDisableSelectionComponent } from './selection/selection-disabled.component';
 import { CheckboxSelectionComponent } from './selection/selection-chkbox.component';
 import { MultiClickSelectionComponent } from './selection/selection-multi-click.component';
+import { MultiClickCheckboxSelectionComponent } from './selection/selection-multi-click-chkbox.component';
 import { CustomCheckboxSelectionComponent } from './selection/selection-chkbox-template.component';
 
 // -- Columns
@@ -84,7 +86,7 @@ import { CommonModule } from '@angular/common';
     FullScreenTreeComponent,
     InlineEditComponent,
     VirtualScrollComponent,
-    HorzVertScrolling,
+    HorzVertScrollingComponent,
     MultipleTablesComponent,
     RowDetailsComponent,
     ResponsiveComponent,
@@ -99,6 +101,7 @@ import { CommonModule } from '@angular/common';
     SortingComparatorComponent,
     CellSelectionComponent,
     MultiSelectionComponent,
+    MultiClickCheckboxSelectionComponent,
     InlineTemplatesComponent,
     TemplateRefTemplatesComponent,
     ColumnFlexComponent,
@@ -123,6 +126,7 @@ import { CommonModule } from '@angular/common';
     DynamicHeightComponent,
     FooterDemoComponent,
     RowGroupingComponent,
+    BasicEmptyComponent,
     BootstrapThemeComponent,
     ClientTreeComponent,
     SummaryRowSimpleComponent,
