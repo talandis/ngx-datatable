@@ -1,8 +1,8 @@
 import {
-  Output, EventEmitter, Input, HostListener, Directive,
-  HostBinding, ElementRef, Renderer2, NgZone, OnInit
+  Directive, ElementRef, EventEmitter, HostBinding, HostListener,
+  Input, NgZone, OnInit, Output, Renderer2
 } from '@angular/core';
-import {RowDragService} from "../services/row-drag.service";
+import { RowDragService } from '../services/row-drag.service';
 
 export interface DropTargetOptions {
   zone?: string;
@@ -23,7 +23,8 @@ export class RowDropDirective implements OnInit {
    */
   @Input() dragOverClass: string;
 
-  @Output() onDropEvent = new EventEmitter();
+  @Output() dropEvent = new EventEmitter();
+
   private options: DropTargetOptions = {};
 
   constructor(
@@ -36,21 +37,21 @@ export class RowDropDirective implements OnInit {
 
   public ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {
-        this.element.nativeElement.addEventListener(
-            'drop', this.onDrop.bind(this)
-        );
-        this.element.nativeElement.addEventListener(
-            'dragend', this.onDragLeave.bind(this)
-        );
-        this.element.nativeElement.addEventListener(
-            'dragover', this.onDragOver.bind(this)
-        );
-        this.element.nativeElement.addEventListener(
-            'dragenter', this.onDragEnter.bind(this)
-        );
-        this.element.nativeElement.addEventListener(
-            'dragleave', this.onDragLeave.bind(this)
-        );
+      this.element.nativeElement.addEventListener(
+        'drop', this.onDrop.bind(this)
+      );
+      this.element.nativeElement.addEventListener(
+        'dragend', this.onDragLeave.bind(this)
+      );
+      this.element.nativeElement.addEventListener(
+        'dragover', this.onDragOver.bind(this)
+      );
+      this.element.nativeElement.addEventListener(
+        'dragenter', this.onDragEnter.bind(this)
+      );
+      this.element.nativeElement.addEventListener(
+        'dragleave', this.onDragLeave.bind(this)
+      );
     });
   }
 
@@ -86,6 +87,6 @@ export class RowDropDirective implements OnInit {
     const item = this.dragService.getItem();
     this.removeDragOverClass();
     this.dragService.endDrag();
-    this.onDropEvent.emit( { index: data, item });
+    this.dropEvent.emit({ index: data, item });
   }
 }

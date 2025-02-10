@@ -16,9 +16,9 @@ import { SelectionType } from '../../types/selection.type';
 import { columnGroupWidths, columnsByPin } from '../../utils/column';
 import { RowHeightCache } from '../../utils/row-height-cache';
 import { translateXY } from '../../utils/translate';
-import {RowDragService} from "../../services/row-drag.service";
-import RowDropEvent from "../../utils/row-drop-event";
-import {MouseEvent} from '../../events';
+import { RowDragService } from '../../services/row-drag.service';
+import RowDropEvent from '../../utils/row-drop-event';
+import { MouseEvent } from '../../events';
 
 @Component({
   selector: 'datatable-body',
@@ -73,12 +73,12 @@ import {MouseEvent} from '../../events';
           [dragData]="indexes.first + i"
           [dragItem]="group"
         >
-          <div row-droppable (onDropEvent)="onDrop($event.index, indexes.first + i, $event.item )"
+          <div row-droppable (dropEvent)="onDrop($event.index, indexes.first + i, $event.item )"
                [ngClass]="'drop-area-top' + (dragService.dragActive ? ' drag-active' : '')"
                dragOverClass="drop-over-active">
             <div class="drop-indicator"></div>
           </div>
-          <div row-droppable (onDropEvent)="onDrop($event.index, indexes.first + i + 1, $event.item )"
+          <div row-droppable (dropEvent)="onDrop($event.index, indexes.first + i + 1, $event.item )"
                [ngClass]="'drop-area-bottom' + (dragService.dragActive ? ' drag-active' : '')"
                dragOverClass="drop-over-active">
             <div class="drop-indicator bottom"></div>
@@ -271,7 +271,7 @@ export class DataTableBodyComponent implements OnInit, OnDestroy {
   @Output() treeAction: EventEmitter<any> = new EventEmitter();
   @Output() rowDropped: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild(ScrollerComponent, {static: false}) scroller: ScrollerComponent;
+  @ViewChild(ScrollerComponent, { static: false }) scroller: ScrollerComponent;
 
   /**
    * Returns if selection is enabled.

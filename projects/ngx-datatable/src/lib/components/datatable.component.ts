@@ -417,7 +417,7 @@ export class DatatableComponent implements OnInit, DoCheck, AfterViewInit, After
   /**
    * A property holds if row drag and drop is enabled
    */
-   @Input() rowsDraggable: boolean = false;
+  @Input() rowsDraggable = false;
 
   /**
    * Body was scrolled typically in a `scrollbarV:true` scenario.

@@ -1,6 +1,6 @@
-import {Injectable, EventEmitter, Output, Renderer2} from '@angular/core';
-import {RowDropDirective} from "../directives/row-droppable.directive";
-import {DataTableBodyRowComponent} from "../components/body/body-row.component";
+import { EventEmitter, Injectable, Output, Renderer2 } from '@angular/core';
+import { RowDropDirective } from '../directives/row-droppable.directive';
+import { DataTableBodyRowComponent } from '../components/body/body-row.component';
 
 @Injectable()
 export class RowDragService {
@@ -13,29 +13,29 @@ export class RowDragService {
   /**
    * Event which will be emitted on Drag Start
    */
-  @Output() onDragStart = new EventEmitter();
+  @Output() dragStart = new EventEmitter();
 
   /**
    * Event which will be emitted on Drag End
    */
-  @Output() onDragEnd = new EventEmitter();
+  @Output() dragEnd = new EventEmitter();
 
   private currentDropDirective: RowDropDirective = null;
   private row: DataTableBodyRowComponent = null;
   private item: any = null;
 
-  startDrag(row: DataTableBodyRowComponent, item: any ) {
+  startDrag(row: DataTableBodyRowComponent, item: any) {
     this.row = row;
     this.dragActive = true;
     this.item = item;
-    this.onDragStart.emit();
+    this.dragStart.emit();
   }
 
   endDrag() {
     this.row = null;
     this.item = null;
     this.dragActive = false;
-    this.onDragEnd.emit();
+    this.dragEnd.emit();
     if (this.currentDropDirective !== null) {
       this.currentDropDirective.removeDragOverClass();
       this.currentDropDirective = null;

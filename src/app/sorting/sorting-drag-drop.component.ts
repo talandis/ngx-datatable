@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {ColumnMode} from 'projects/swimlane/ngx-datatable/src/public-api';
-import RowDropEvent from "../../../projects/swimlane/ngx-datatable/src/lib/utils/row-drop-event";
+import { Component, OnInit } from '@angular/core';
+import { ColumnMode } from 'projects/ngx-datatable/src/public-api';
+import RowDropEvent from '../../../projects/ngx-datatable/src/lib/utils/row-drop-event';
 
 @Component({
   selector: 'drag-drop-sorting-demo',
@@ -68,6 +68,6 @@ export class DragDropSortingComponent implements OnInit {
   }
 
   onDrop(event: RowDropEvent) {
-    console.log( event );
+    console.log(event);
   }
 }
